@@ -89,116 +89,122 @@
                               persistent
                               max-width="600px"
                             >
-                                <v-card>
-                                    <v-card-title>
-                                        <span class="text-h5">Опубликовать цитату</span>
-                                    </v-card-title>
-                                    <v-card-text>
-                                        <v-container>
-                                            <v-alert
-                                                v-model="error_alert"
-                                                dense
-                                                type="error"
-                                            >
-                                                {{ error_message }}
-                                            </v-alert>
-                                            <v-row>
-                                                <v-col cols="12">
-                                                    <v-text-field
-                                                        label="Текст цитаты"
-                                                        v-model="quote_text"
-                                                        :rules="[v => !!v || 'Необходимо заполнить поле!']"
-                                                        required
-                                                    ></v-text-field>
-                                                </v-col>
-                                                <v-col cols="12">
-                                                    <v-text-field
-                                                        label="Автор"
-                                                        v-model="quote_author"
-                                                        required
-                                                        :rules="[v => !!v || 'Необходимо заполнить поле!']"
-                                                    ></v-text-field>
-                                                </v-col>
-                                                <v-col cols="12">
-                                                    <v-combobox
-                                                        v-model="model"
-                                                        :filter="filter"
-                                                        :hide-no-data="!search"
-                                                        :items="items"
-                                                        :search-input.sync="search"
-                                                        :rules="[v => !!v || 'Необходимо указать хотя бы 1 тег!']"
-                                                        :error-messages="errors"
-                                                        :counter="3"
-                                                        v-on:change="changer"
-                                                        hide-selected
-                                                        label="Список тегов"
-                                                        multiple
-                                                        small-chips
-                                                        solo
-                                                        required
-                                                        @keypress.enter.prevent
-                                                    >
-                                                        <template v-slot:no-data>
-                                                            <v-list-item>
-                                                                <span class="subheading">Тег не найден </span>
-                                                            </v-list-item>
-                                                        </template>
-                                                        <template v-slot:selection="{ attrs, item, parent, selected }">
-                                                            <v-chip
-                                                                v-if="item === Object(item)"
-                                                                v-bind="attrs"
-                                                                color="primary"
-                                                                :input-value="selected"
-                                                                label
-                                                                small
-                                                                dark
-                                                                @keypress.enter.prevent
-                                                            >
-                                                                <span class="pr-2">
-                                                                    {{ item.text }}
-                                                                </span>
-                                                                <v-icon
+                                <v-form
+                                    ref="form"
+                                    v-model="valid"
+                                    lazy-validation
+                                >
+                                    <v-card>
+                                        <v-card-title>
+                                            <span class="text-h5">Опубликовать цитату</span>
+                                        </v-card-title>
+                                        <v-card-text>
+                                            <v-container>
+                                                <v-alert
+                                                    v-model="error_alert"
+                                                    dense
+                                                    type="error"
+                                                >
+                                                    {{ error_message }}
+                                                </v-alert>
+                                                <v-row>
+                                                    <v-col cols="12">
+                                                        <v-text-field
+                                                            label="Текст цитаты"
+                                                            v-model="quote_text"
+                                                            :rules="[v => !!v || 'Необходимо заполнить поле!']"
+                                                            required
+                                                        ></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12">
+                                                        <v-text-field
+                                                            label="Автор"
+                                                            v-model="quote_author"
+                                                            required
+                                                            :rules="[v => !!v || 'Необходимо заполнить поле!']"
+                                                        ></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12">
+                                                        <v-combobox
+                                                            v-model="model"
+                                                            :filter="filter"
+                                                            :hide-no-data="!search"
+                                                            :items="items"
+                                                            :search-input.sync="search"
+                                                            :rules="[v => !!v || 'Необходимо указать хотя бы 1 тег!']"
+                                                            :error-messages="errors"
+                                                            :counter="3"
+                                                            v-on:change="changer"
+                                                            hide-selected
+                                                            label="Список тегов"
+                                                            multiple
+                                                            small-chips
+                                                            solo
+                                                            required
+                                                            @keypress.enter.prevent
+                                                        >
+                                                            <template v-slot:no-data>
+                                                                <v-list-item>
+                                                                    <span class="subheading">Тег не найден </span>
+                                                                </v-list-item>
+                                                            </template>
+                                                            <template v-slot:selection="{ attrs, item, parent, selected }">
+                                                                <v-chip
+                                                                    v-if="item === Object(item)"
+                                                                    v-bind="attrs"
+                                                                    color="primary"
+                                                                    :input-value="selected"
+                                                                    label
                                                                     small
-                                                                    @click="parent.selectItem(item)"
+                                                                    dark
+                                                                    @keypress.enter.prevent
                                                                 >
-                                                                    mdi-close
-                                                                </v-icon>
-                                                            </v-chip>
-                                                        </template>
-                                                        <template v-slot:item="{ index, item }">
-                                                            <v-chip
-                                                                
-                                                                color="primary"
-                                                                dark
-                                                                label
-                                                                small
-                                                            >
-                                                                {{ item.text }}
-                                                            </v-chip>
-                                                        </template>
-                                                    </v-combobox>
-                                                </v-col>
-                                            </v-row>
-                                        </v-container>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn
-                                            color="primary"
-                                            text
-                                            @click="dialog = false"
-                                        >
-                                            Закрыть
-                                        </v-btn>
-                                        <v-btn
-                                            color="primary"
-                                            text
-                                            @click="publishQuote()"
-                                        >
-                                            Сохранить
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
+                                                                    <span class="pr-2">
+                                                                        {{ item.text }}
+                                                                    </span>
+                                                                    <v-icon
+                                                                        small
+                                                                        @click="parent.selectItem(item)"
+                                                                    >
+                                                                        mdi-close
+                                                                    </v-icon>
+                                                                </v-chip>
+                                                            </template>
+                                                            <template v-slot:item="{ index, item }">
+                                                                <v-chip
+                                                                    
+                                                                    color="primary"
+                                                                    dark
+                                                                    label
+                                                                    small
+                                                                >
+                                                                    {{ item.text }}
+                                                                </v-chip>
+                                                            </template>
+                                                        </v-combobox>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-container>
+                                        </v-card-text>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn
+                                                color="primary"
+                                                text
+                                                @click="closeDialog()"
+                                            >
+                                                Закрыть
+                                            </v-btn>
+                                            <v-btn
+                                                color="primary"
+                                                text
+                                                @click="publishQuote()"
+                                            >
+                                                Сохранить
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-form>
                             </v-dialog>
                         </v-row>
 
@@ -316,14 +322,13 @@
                     },
                 ],
                 tagList: [],
-                errs: [],
-                fieldsErrs: [],
                 menu: false,
                 model: [
                 ],
                 x: 0,
                 search: null,
                 y: 0,
+                valid: true,
             };
         },
         mounted() {
@@ -334,7 +339,6 @@
                 this.loading = true;
                 axios.get(`/api/quotes?page=`+ page)
                     .then((response) => {
-                        // console.log(response);
                         if (response.data.last_page != null) {
                             this.totalPages = response.data.last_page;
                             this.currentPage = response.data.current_page;
@@ -343,28 +347,24 @@
                         if (response.data.data != null) {
                                 this.quotes = response.data.data;
                                 this.loading = false;
-                                // console.log(this.quotes);
                             }
                     });
             },
             loadTags: function() {
                 axios.get(`/api/tags`)
                     .then((response) => {
-                        // console.log(response);
                         if (response.data != null) {
                                 this.tagList = response.data;
                                 this.items = [];
                                 this.items.push({ 
                                     header: 'Выберите тег'
                                 });
-                                // this.tagList.forEach(element => console.log(element));
                                 this.tagList.forEach(element => this.items.push({
                                     text: element.name,
                                     id: element.id
                                 }));
                                 this.model = [];
                                 this.model.push(this.items[1]);
-                                // console.log(this.items);
                             }
                     });
             },
@@ -385,13 +385,12 @@
                         tags: this.tags,
                     })
                     .then((response) => {
-                        // console.log(response);
                         if (response.data.error != null) {
                             this.error_message = '';
                             this.error_message = "Пожалуйста, заполните все поля";
                             this.error_alert = true;
                         } else {
-                            this.dialog = false;
+                            this.closeDialog();
                             this.quote_text = '';
                             this.quote_author = '';
                             this.model = [];
@@ -403,17 +402,19 @@
                         this.error_alert = true;
                     }); 
             },
+            closeDialog: function() {
+                this.dialog = false;
+                this.$refs.form.resetValidation();
+                this.errors = null;
+            },
             openQuote: function(id) {
-                // console.log(id);
                 this.dialog_quote = true;
-                // this.quote_text_1 = id;
                 this.loadQuoteById(id);
             },
             loadQuoteById: function(id) {
                 this.quote_tags_sel = [];
                 axios.get(`/api/quote/show/` + id)
                     .then((response) => {
-                        // console.log(response);
                         this.quote_text_sel = response.data.text;
                         this.quote_author_sel = response.data.author;
                         this.quote_date_sel = response.data.date;
