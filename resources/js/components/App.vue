@@ -5,7 +5,7 @@
                 <v-toolbar-title><strong><h4>Онлайн-цитатник</h4></strong></v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
-                    <v-btn text @click="addQuote()"><v-icon dark class="mr-1">mdi-plus-circle</v-icon>Публикация цитаты</v-btn>
+                    <v-btn text @click="addQuote()"><v-icon large dark class="mr-1" v-if="hideText">mdi-plus-circle</v-icon><span v-else>Публикация цитаты</span></v-btn>
                 </v-toolbar-items>
             </v-app-bar>
             <v-main>
@@ -329,10 +329,18 @@
                 search: null,
                 y: 0,
                 valid: true,
+                hideText: false,
             };
+        },
+        beforeDestroy() {
+            if (typeof window === 'undefined')
+                return window.removeEventListener('resize', this.onResize, { passive: true });
         },
         mounted() {
             this.loadQuotes(this.page);
+            this.onResize();
+
+            window.addEventListener('resize', this.onResize, { passive: true })
         },
         methods: {
             loadQuotes: function(page) {
@@ -447,6 +455,9 @@
                 if (typeof items[items.length - 1] !== 'object') this.model.splice(-1,1);
                 if (this.model.length > 0) this.errors = null;
                 if (this.model.length == 0) this.errors = "Необходимо выбрать хотя бы 1 тег!";
+            },
+            onResize () {
+                this.hideText = window.innerWidth < 600;
             },
         }
     };
